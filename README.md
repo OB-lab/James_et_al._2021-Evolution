@@ -51,7 +51,7 @@ To characterize how much genotypic variation of each of the 9,269 sequenced SNPs
 ```
 ./plink --pca 2821 --allow-extra-chr –vcf SNPs/ESC_rel_50pp_80md_HWE_pairs_MAF0.05_tig00000020.18881.vcf --mind –out SNPs/ESC_rel_50pp_80md_HWE_pairs_MAF0.05_tig00000020.18881")
 ```
-The ```.eigenvec``` output files were copied to a separate folder, and we used the R code [SNPeffectSizes.R](genotype/R_code/SNPeffectSizes.R) to calculate the effect size per SNP.  These results are here: [SNPeffectSizes.txt](genotype/output_files/SNPeffectSizes.txt)
+The ```.eigenvec``` output files were copied to a separate folder, and we used the R code [SNPeffectSizes.R](genotype/R_code/SNPeffectSizes.R) to calculate the effect size per SNP. These results are here: [SNPeffectSizes.txt](genotype/results/SNPeffectSizes.txt)
 
 To further explore detailed patterns of parallelism at the level of the nucleotide site, we undertook three approaches. 
 
@@ -73,14 +73,102 @@ We calculated CSS per SNP by first using ```PLINK``` to perform multidimensional
 
 We then used a custom R script [CSS.R](R_code/CSS.R) to calculate the CSS per SNP. 
 
-Outliers were also detected in ```BayeScan``` (the input file was first created using ```PGDspider```):
+Outliers were also detected in ```BayeScan``` (the input file was first created using ```PGDspider```, and is found here: [BayescanPairs.txt](genotype/input_files/BayescanPairs.txt)):
 
 ```
-BayeScan ESC_rel_50pp_80md_HWE_pairs_MAF0.05.BayeScan.txt -threads 8 pr_odds 10 -o BayeScan_prod100
+BayeScan BayeScanPairs.txt -threads 8 pr_odds 10 -o BayeScan_prod100
 ```
-For ```Approach 1```, we classified SNPs as outliers if they were detected in at least two of the three methods.
+We categorized SNPs as highly differentiated if they contained a posterior probability > 0.91, corresponding to a Bayes Factor of  > 10. For ```Approach 1```, we classified SNPs as outliers if they were detected in at least two of the three methods.
 
-These summarized results from ```Approach 1``` are found here: [DH_SNP_parallelism_summary.xlsx](genotype/results/DH_SNP_parallelism_summary.xls)
+These summarized results from ```Approach 1``` are found here: [DH_SNP_parallelism_summary.xlsx](genotype/results/SNP_gene/SNP_parallelism_summary_DH.xls)
 
 #### Approach 2 ####
-We detected outliers separately for the Dune-Headland pairs at each locality. As above, we identified outliers for each replicate pair using a combination of F<sub>ST</sub>, CSS, and BayeScan. Instead of selecting the top 1% of F<sub>ST</sub> and CSS values (which is highly dependent on the number of sampled SNPs) we chose stringent cut-offs of F<sub>ST</sub> and CSS > 0.95. Within ```BayeScan```, we considered SNPs with a posterior probability > 0.91 as highly differentiated, which corresponds to a Bayes Factor > 10.
+We detected outliers separately for the Dune-Headland pairs at each locality (first filtering the VCF file for MAF 0.05 at each locality). As above, we identified outliers for each replicate pair using a combination of F<sub>ST</sub>, CSS, and BayeScan. Instead of selecting the top 1% of F<sub>ST</sub> and CSS values (which is highly dependent on the number of sampled SNPs) we chose stringent cut-offs of F<sub>ST</sub> and CSS > 0.95. Within ```BayeScan```, we considered SNPs with a posterior probability > 0.91 as highly differentiated, which corresponds to a Bayes Factor > 10.
+
+These summarized results from ```Approach 2`` are found here: [SNP_parallelism_summary_DxxHxx.xls](genotype/results/SNP_gene)
+
+#### Approach 3 ####
+To detect more subtle signals of outliers between the ecotypes, we asked whether there were concordant allele frequency changes across replicate pairs. Specifically, if a nucleotide site was highly differentiated in at least one pair according to ```Approach 2```, we compared allele frequencies across all pairs for the site. These results are found here: [SNP_concordant_outliers.xls](genotype/results/SNP_gene/ SNP_concordant_outliers.xls).
+
+We tested whether the change in allele frequency for each replicate pair was in the same direction across all localities. We used two-sided dependent-samples sign-tests in R to determine the level of statistical significance:   
+
+```
+binom.test(9, 9)
+	# P-value = 0.0039
+binom.test(8, 9)
+	# P-value = 0.039
+binom.test(7, 9)
+# P-value = 0.1797
+```
+
+We therefore treated a SNP as concordant if the change in allele frequency was in the same direction for at least 8 of the 9 localities. 
+
+### *Senecio lautus* transcriptome
+
+To explore whether any of the above candidate outlier SNPs were in genic or non-genic regions, we created the S. lautus transcriptome using the following RNAseq files:
+
+[Huanle to do]
+
+This assembled transcriptome was mapped to the *S. lautus* PacBio reference genome using ```minimap2```:
+
+minimap2 Senecio_PacBio_v1.fasta Senecio_transcriptome_v1.fasta > mapped.paf
+
+A series of scripts and file manipulations (details available upon request) were undertaken to determine whether SNPs resided in genic or non-genic regions. More specifically, we considered each transcript a separate gene, which included all isoforms. As the transcriptome excludes introns, we still considered SNPs mapped to the reference genome that fall between two segments of the same transcript as a genic SNP. All other SNPs were considered non-genic, which are expected to include variants in regulatory and repetitive regions as well as in genic regions with unknown homologous genes in other plants. We excluded SNPs that had > 1 gene mapping to it.
+
+We calculated the number of shared outlier SNPs between all pairwise comparisons across localities using the ```Shared outlier SNPs between pairs``` section of the R script: [sharedOutliers.R](genotype/R_code/sharedOutliers.R). This script also calculates whether the number of shared outliner SNPs is greater than chance. The input files (i.e., the outlier SNPs per locality, ```DxxHxxoutliers.txt```) are found here: [outlier_SNPs](genotype/input_files/outlier_SNPs). Also in this folder is the following file [avSNPsPairs.txt](genotype/input_files/outlier_SNPs/avSNPsPairs.txt), which is used for the total number of SNPs per locality (see R code for details). These results are found here: [sharedSNPsPairwise.txt](genotype/results/SNP_gene/sharedSNPsPairwise.txt)
+
+We also calculated the number of total pairs that have a given SNP as an outlier (see R code for details). These results are found here: [sharedSNPsOutliers.txt](genotype/results/SNP_gene/sharedSNPsOutliers.txt)
+
+## Parallel genic polymorphisms
+
+As with the SNPs above, we characterized how much genotypic variation of each of the genes is explained by the overall differences between ecotypes compared to the individual replicate pairs at each locality, we used ```PLINK``` to conduct a PCA on each gene. For instance, for gene comp66_c0.vcf:
+
+```
+./plink --pca 2821 --allow-extra-chr –vcf genes/comp66_c0.vcf --mind –out genes/ESC_rel_50pp_80md_HWE_pairs_MAF0.05_tig00000020.18881")
+```
+, where comp66_c0.vcf is a VCF file containing all the sequenced SNPs in that gene. We retained the loadings of the first eigenvector for each gene.
+
+The ```.eigenvec``` output files were copied to a separate folder, and we used the same R code as specified above [SNPeffectSizes.R](genotype/R_code/SNP_gene/SNPeffectSizes.R) to calculate the effect size per gene. These results are here: [geneEffectSizes.txt](genotype/results/SNP_gene/geneEffectSizes.txt)
+
+For each outlier gene of interest, we obtained it’s RefSeq code by using ```BLASTx``` with the *S. lautus* transcript in which the outlier SNP fell within. 
+
+```
+blastx -query genes_transcripts.fasta -db refseq_protein -entrez_query "Arabidopsis thaliana [organism]" -remote -evalue 1e-6 -outfmt 7 -out genesAnnoAll.txt
+```
+, where genes_transcripts.fasta are the *S. lautus* transcripts of interest. We then extracted the top hit for each transcript. These results are here: [genesTopHitsAll.txt](genotype/results/SNP_gene/genesTopHitsAll.txt)
+
+We used ```DAVID``` to obtain the predicted functional annotation for the outlier genes of interest. These are found in the ```DxxHxx-ClusteringSummary.xls``` files, which are explained below. 
+
+
+We calculated the number of shared outlier genes between all pairwise comparisons across localities using the ```Shared outlier genes between pairs``` section of the R script: [sharedOutliers.R](genotype/R_code/sharedOutliers.R). This script also calculates whether the number of shared outliner genes is greater than chance. 
+
+The input files (i.e., the outlier genes per locality, ```DxxHxxoutlierGenes.txt```) are found here: [outlier_genes](genotype/input_files/outlier_genes). Also in this folder is the following file [avGenessPairs.txt](genotype/input_files/outlier_genes/avGenesPairs.txt), which is used for the total number of genes per locality (see R code for details). These results are found here: [sharedGenesPairwise.txt](genotype/results/SNP_gene/sharedGenesPairwise.txt)
+
+We also calculated the number of total pairs that have a given gene as an outlier (see R code for details). These results are found here: [sharedGenesOutliers.txt](genotype/results/SNP_gene/sharedGenesOutliers.txt)
+
+## Enriched biological functions
+
+We undertook gene-enrichment analysis for the outlier genes for each replicate pair using functional annotation clustering in the web-based program ```DAVID```, using the *Arabidopsis* orthologues for our outlier genes. We used the *Arabidopsis thaliana* genome as the genetic background. These input files per pair are found here: [genotype/input/functional_pathway/](genotype/input/functional_pathway/). 
+
+The results per pair are found here: [genotype/results/functional_pathway/](genotype/results/functional_pathway/). The first sheet of each excel document (DxxHxx-ClusteringSummary.xls) is the direct output from ```DAVID```. In the P-value column, cells are highlighted green if the P-value < 0.05. The second sheet “TopFromEachCluster” contains the category with the smallest P-value for each cluster (i.e., the rows in bold in the first sheet of the spreadsheet). An additional column “Summarised term” was added to summarise the terms from each cluster when there were multiple P-values < 0.05 within a cluster. 
+
+[allPairs-ClusteringSummary.xls](genotype/results/functional_pathway/allPairs-ClusteringSummary.xls) shows how these summarised terms were grouped into their final functional pathway categories.
+
+## Distributions of shared SNPs, genes, pathways
+
+We compared the distributions of the proportions of shared outlier nucleotide sites, outlier genes and enriched biological functions across pairs using a two-sided X<sub>2</sub>-test with continuity correction in R: [chisq.R](genotype/R_code/chisq.R)
+See: [PropSharedPairs.txt](genotype/results/SNP_gene_pathway/PropSharedPairs.txt) for the summary file of the counts and proportions of shared SNPs, genes and functions across pairs. 
+
+## Demographic effects on phenotypic parallelism
+
+We tested whether the variation in phenotypic parallelism within the system could be explained by demographic factors. See the section ```Linear models``` of the R code: [phenotypeGenotype.R](phenotype_genotype/R_code/phenotypeGenotype.R) for the linear models. The input file is found here: [phenoEnvGfDivTime.txt](phenotype_genotype/input_files/phenoEnvGfDivTime.txt) (note some of these values are found in Table S4 of the manuscript). 
+We asked whether pairs that were more phenotypically similar shared more outlier nucleotide sites, genes, and biological functions using Mantel tests. The input files are as follows:
+The matrix of phenotypic angles between localities: [anglesMatrix.txt](phenotype_genotype/input_files/anglesMatrix.txt)
+The matrix of phenotypic change in lengths between localities: [deltaLengthsMatrix.txt](phenotype_genotype/input_files/deltaLengthsMatrix.txt)
+The matrix of shared outlier SNPs between localities: [sharedSNPsMatrixNoTas.txt](phenotype_genotype/input_files/sharedSNPsMatrixNoTas.txt)
+The matrix of shared outlier genes between localities: [sharedGenesMatrixNoTas.txt](phenotype_genotype/input_files/sharedGenesMatrixNoTas.txt)
+The matrix of shared enriched biological functions between localities: [sharedPathwaysMatrixNoTas.txt](phenotype_genotype/input_files/sharedPathwaysMatrixNoTas.txt)
+In these files, the populations are ordered numerically (i.e., D00H00, D01H01, D02H04, D03H02, D04H05, D05H06, D12H14, D14H15, D32H12). 
+
+See the section ```Mantel tests``` of the R code: [phenotypeGenotype.R](phenotype_genotype/R_code/phenotypeGenotype.R) for the Mantel tests. 
+
