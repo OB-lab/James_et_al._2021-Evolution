@@ -107,7 +107,7 @@ We therefore treated a SNP as concordant if the change in allele frequency was i
 
 To explore whether any of the above candidate outlier SNPs were in genic or non-genic regions, we created the *S. lautus* transcriptome using the following RNAseq files:
 
-** XXX Huanle to do XXX**
+*** Huanle to do ***
 
 This assembled transcriptome was mapped to the *S. lautus* PacBio reference genome usingc```minimap2```:
 
@@ -175,6 +175,9 @@ The matrix of shared outlier genes between localities: [sharedGenesMatrixNoTas.t
 The matrix of shared enriched biological functions between localities: [sharedPathwaysMatrixNoTas.txt](phenotype_genotype/input_files/sharedPathwaysMatrixNoTas.txt)
 
 In these files, the populations are ordered numerically (i.e., D00H00, D01H01, D02H04, D03H02, D04H05, D05H06, D12H14, D14H15, D32H12). See the section “Mantel tests” of the R code: [phenotypeGenotype.R](phenotype_genotype/R_code/phenotypeGenotype.R) for the Mantel tests. 
+
+
+
 
 
 
