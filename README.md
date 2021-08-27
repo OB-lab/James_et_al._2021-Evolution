@@ -164,7 +164,6 @@ See: [PropSharedPairs.txt](genotype/results/SNP_gene_pathway/PropSharedPairs.txt
 
 We tested whether the variation in phenotypic parallelism within the system could be explained by demographic factors. See the section “Linear models” of the R code: [phenotypeGenotype.R](phenotype_genotype/R_code/phenotypeGenotype.R) for the linear models. The input file is found here: [phenoEnvGfDivTime.txt](phenotype_genotype/input_files/phenoEnvGfDivTime.txt) (note some of these values are found in Table S4 of the manuscript). 
 We asked whether pairs that were more phenotypically similar shared more outlier nucleotide sites, genes, and biological functions using Mantel tests. The input files are as follows:
-
 The matrix of phenotypic angles between localities: [anglesMatrix.txt](phenotype_genotype/input_files/anglesMatrix.txt)
 
 The matrix of phenotypic change in lengths between localities: [deltaLengthsMatrix.txt](phenotype_genotype/input_files/deltaLengthsMatrix.txt)
@@ -176,4 +175,9 @@ The matrix of shared outlier genes between localities: [sharedGenesMatrixNoTas.t
 The matrix of shared enriched biological functions between localities: [sharedPathwaysMatrixNoTas.txt](phenotype_genotype/input_files/sharedPathwaysMatrixNoTas.txt)
 
 In these files, the populations are ordered numerically (i.e., D00H00, D01H01, D02H04, D03H02, D04H05, D05H06, D12H14, D14H15, D32H12). See the section “Mantel tests” of the R code: [phenotypeGenotype.R](phenotype_genotype/R_code/phenotypeGenotype.R) for the Mantel tests. 
+
+
+
+
+
 
