@@ -127,8 +127,6 @@ cd-hit-est -i in.fasta -o out.fasta -c 96 -n 8 -r 1
 
 We then chose 1 representative from each cluster. ***Huanle: can you explain how these representatives were chosen?***
 
-The final assembled transcriptome is found here: [Senecio_transcriptome_v1.fasta](transcriptome/Senecio_transcriptome_v1.fasta).
-
 This assembled transcriptome was mapped to the *S. lautus* PacBio reference genome using ```minimap2```:
 
 ```
