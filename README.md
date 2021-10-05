@@ -36,7 +36,7 @@ This Genotyping-by-Sequencing dataset comes from previous work (James *et al.* 2
 
 ## Linkage disequilibrium
 
-Each population was first extracted into a separate file and we used ```PLINK v1.9`` to calculate the haploblocks per population. For instance, for population D00: 
+Each population was first extracted into a separate file and we used ```PLINK v1.9``` to calculate the haploblocks per population. For instance, for population D00: 
 
 ```
 ./plink --bfile D03_H02_ESC_rel_50pp_80md_HWE_MAC1_pairs_MAF0.05_D00 --allow-extra-chr --blocks 'no-pheno-req' --out Haploblocks/D00
