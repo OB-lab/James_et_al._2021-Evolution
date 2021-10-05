@@ -109,7 +109,7 @@ To explore whether any of the above candidate outlier SNPs were in genic or non-
 
 *** Huanle to do ***
 
-This assembled transcriptome was mapped to the *S. lautus* PacBio reference genome usingc```minimap2```:
+This assembled transcriptome was mapped to the *S. lautus* PacBio reference genome using ```minimap2```:
 
 ```
 minimap2 Senecio_PacBio_v1.fasta Senecio_transcriptome_v1.fasta > mapped.paf
