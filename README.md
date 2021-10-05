@@ -105,9 +105,29 @@ We therefore treated a SNP as concordant if the change in allele frequency was i
 
 ### *Senecio lautus* transcriptome
 
-To explore whether any of the above candidate outlier SNPs were in genic or non-genic regions, we created the *S. lautus* transcriptome using the following RNAseq files:
+To explore whether any of the above candidate outlier SNPs were in genic or non-genic regions, we created the *S. lautus* transcriptome. The raw RNAseq files are available upon request. We first used ```SEECER v0.1.3``` with default parameters to correct errors in RNAseq data. ***Huanle: did you do this for each RNAseq file separately, or were they first merged into a single file. Can you provide some explanation of what kind of errors are being corrected in this step?***
 
-*** Huanle to do ***
+```
+bash ./bin/run_seecer.sh reads1.fastq reads2.fastq 
+```
+
+We then carried out de novo assembly using ```Trinity v2.0.2``` :
+
+```
+perl /path/to/Trinity.pl --seqType fq --left R1.fastq --right R2.fastq --JM 2G --min_contig_length 100 --CPU 4 --bflyHeapSpaceMax 10G
+```
+, where ***Huanle: can you overview what the parameters mean, such as what I have done in my examples above***
+
+We chose the representative transcripts from each locus by retaining the transcript with the highest read coverage for each subcomponent. To further remove the redundant transcripts, which may come from alternative splicing or close paralogs, we clustered the assembly using ```CD-HIT-EST v4.6.1``` 
+
+```
+cd-hit-est -i in.fasta -o out.fasta -c 96 -n 8 -r 1 
+```
+, where ***Huanle: can you overview what the parameters mean, such as what I have done in my examples above***
+
+We then chose 1 representative from each cluster. ***Huanle: can you explain how these representatives were chosen?***
+
+The final assembled transcriptome is found here: [Senecio_transcriptome_v1.fasta](transcriptome/Senecio_transcriptome_v1.fasta).
 
 This assembled transcriptome was mapped to the *S. lautus* PacBio reference genome using ```minimap2```:
 
