@@ -116,14 +116,14 @@ We then carried out de novo assembly using ```Trinity v2.0.2``` :
 ```
 perl /path/to/Trinity.pl --seqType fq --left R1.fastq --right R2.fastq --JM 2G --min_contig_length 100 --CPU 4 --bflyHeapSpaceMax 10G
 ```
-, where ***Huanle: can you overview what the parameters mean, such as what I have done in my examples above***
+, where ```JM``` determines the amount of memory used for k-mer counting by jellyfish, and ```bflyHeapSpaceMax``` defines the amount of memory that is allocated to a single Butterfly (Trinity compoment) process. 
 
 We chose the representative transcripts from each locus by retaining the transcript with the highest read coverage for each subcomponent. To further remove the redundant transcripts, which may come from alternative splicing or close paralogs, we clustered the assembly using ```CD-HIT-EST v4.6.1``` 
 
 ```
 cd-hit-est -i in.fasta -o out.fasta -c 96 -n 8 -r 1 
 ```
-, where ***Huanle: can you overview what the parameters mean, such as what I have done in my examples above***
+, where ```c``` is the sequence identity threshold, ```n``` is the word length, and ```r``` is a value of either  1 or 0, where 1 represents that the chosen alignment will be done on both + and - strands.
 
 We then chose 1 representative from each cluster. ***Huanle: can you explain how these representatives were chosen?***
 
