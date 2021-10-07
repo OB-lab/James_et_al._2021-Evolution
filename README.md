@@ -105,7 +105,7 @@ We therefore treated a SNP as concordant if the change in allele frequency was i
 
 ### *Senecio lautus* transcriptome
 
-To explore whether any of the above candidate outlier SNPs were in genic or non-genic regions, we created the *S. lautus* transcriptome. The raw RNAseq files are available upon request. We first used ```SEECER v0.1.3``` with default parameters to correct errors in RNAseq data. ***Huanle: did you do this for each RNAseq file separately, or were they first merged into a single file. Can you provide some explanation of what kind of errors are being corrected in this step?***
+To explore whether any of the above candidate outlier SNPs were in genic or non-genic regions, we created the *S. lautus* transcriptome. The raw RNAseq files are available upon request. We first used ```SEECER v0.1.3``` with default parameters to correct errors in RNAseq data.
 
 ```
 bash ./bin/run_seecer.sh reads1.fastq reads2.fastq 
@@ -125,7 +125,7 @@ cd-hit-est -i in.fasta -o out.fasta -c 96 -n 8 -r 1
 ```
 , where ```c``` is the sequence identity threshold, ```n``` is the word length, and ```r``` is a value of either  1 or 0, where 1 represents that the chosen alignment will be done on both + and - strands.
 
-We then chose 1 representative from each cluster. ***Huanle: can you explain how these representatives were chosen?***
+We then chose 1 representative from each cluster.
 
 This assembled transcriptome was mapped to the *S. lautus* PacBio reference genome using ```minimap2```:
 
