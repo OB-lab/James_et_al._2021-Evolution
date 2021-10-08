@@ -125,7 +125,7 @@ cd-hit-est -i in.fasta -o out.fasta -c 96 -n 8 -r 1
 ```
 , where ```c``` is the sequence identity threshold, ```n``` is the word length, and ```r``` is a value of either  1 or 0, where 1 represents that the chosen alignment will be done on both + and - strands.
 
-We then chose 1 representative from each cluster.
+We then chose the longest transcript as a representative from each cluster.
 
 This assembled transcriptome was mapped to the *S. lautus* PacBio reference genome using ```minimap2```:
 
