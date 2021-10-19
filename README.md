@@ -15,7 +15,7 @@ In ~11% of sampled plants, we were unable to measure all six plant architectural
 Each trait was log-transformed and standardised to have a mean of 0 and standard deviation of 1. 
 
 ```
-dataFrame$trait <- scale(log(dataFrame$trait)
+dataFrame$trait <- scale(log(dataFrame$trait))
 ```
 Pairwise correlations between all traits were calculated.
 
