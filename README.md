@@ -1,4 +1,4 @@
-This repository contains all code and data for the phenotypic and genotypic analysis performed in: **James ME, Wilkinson ME, Bernal DM, Liu H, North HL, Engelstaedter J and Ortiz-Barrientos D. (2021) Phenotypic and genotypic parallel evolution of parapatric ecotypes in *Senecio*. Accepted in Evolution. [volume.page] [doi]**
+This repository contains all code and data for the phenotypic and genotypic analysis performed in: **James ME, Wilkinson ME, Bernal DM, Liu H, North HL, Engelstaedter J and Ortiz-Barrientos D. (2021) Phenotypic and genotypic parallel evolution of parapatric ecotypes in *Senecio*. Evolution. 75, 3115-3131**
 
 All below code was performed in ```R v3.4.2```, unless otherwise specified. 
 
